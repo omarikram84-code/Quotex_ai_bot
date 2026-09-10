@@ -1,1 +1,36 @@
+import os
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🤖 أهلاً بك في Quotex AI Analyst\n\n"
+        "📊 بوت تحليل السوق المتقدم\n"
+        "استخدم /analyze لبدء التحليل."
+    )
+
+
+async def analyze(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "🔎 جاري تجهيز محرك تحليل السوق..."
+    )
+
+
+def main():
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+
+    if not token:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN غير موجود في إعدادات Railway")
+
+    app = Application.builder().token(token).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("analyze", analyze))
+
+    print("🤖 Bot is running...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
